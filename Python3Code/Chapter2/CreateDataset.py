@@ -64,7 +64,7 @@ class CreateDataset:
                 (dataset[timestamp_col] < (self.data_table.index[i] +
                                            timedelta(milliseconds=self.granularity)))
             ]
-            print(relevant_rows)
+            # print(relevant_rows)
             for col in value_cols:
                 # Take the average value
                 if len(relevant_rows) > 0:
