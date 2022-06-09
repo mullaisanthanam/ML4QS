@@ -23,17 +23,23 @@ GRANULARITIES = [60000, 250]
 print('Please wait, this will take a while to run!')
 
 # seconds to timestamp conversion
-def add_timestamp(file, col_name):
-    print('Reading data from test')
-    timeFile = 'time.csv'
-    data =  (pd.read_csv(DATASET_PATH / timeFile, skipinitialspace=True))
-    dataNew = pd.read_csv(DATASET_PATH/ file, skipinitialspace=True)
-    print(data['system time'][0])
-    dataNew['timestamp'] =1000000000*round(dataNew[col_name] + data['system time'][0]).astype(int)
-    return dataNew
+# def add_timestamp(file, col_name):
+#     print('Reading data from test')
+#     timeFile = 'time.csv'
+#     data =  (pd.read_csv(DATASET_PATH / timeFile, skipinitialspace=True))
+#     dataNew = pd.read_csv(DATASET_PATH/ file, skipinitialspace=True)
+#     print(data['system time'][0])
+#     dataNew['timestamp'] =1000000000*(dataNew[col_name] + data['system time'][0])
+#     return dataNew
 
-new_acc = add_timestamp('Accelerometer.csv', 'time')
-new_acc.to_csv(DATASET_PATH / 'formatted_accelerometer.csv')
+# new_acc = add_timestamp('Accelerometer.csv', 'time')
+# new_acc.to_csv(DATASET_PATH / 'formatted_accelerometer.csv')
+# new_acc = add_timestamp('Gyroscope.csv', 'time')
+# new_acc.to_csv(DATASET_PATH / 'formatted_gyroscope.csv')
+# new_acc = add_timestamp('Light.csv', 'time')
+# new_acc.to_csv(DATASET_PATH / 'formatted_light.csv')
+# new_acc = add_timestamp('Location.csv', 'time')
+# new_acc.to_csv(DATASET_PATH / 'formatted_location.csv')
 
 datasets = []
 for milliseconds_per_instance in GRANULARITIES:
@@ -46,8 +52,11 @@ for milliseconds_per_instance in GRANULARITIES:
 
     # We add the accelerometer data (continuous numerical measurements) of the phone and the smartwatch
     # and aggregate the values per timestep by averaging the values
-    dataset.add_numerical_dataset('formatted_accelerometer.csv', 'timestamp', ['x','y','z'], 'avg', 'acc_phone_')
-
+    # dataset.add_numerical_dataset('formatted_accelerometer.csv', 'timestamp', ['x','y','z'], 'avg', 'acc_phone_')
+    # dataset.add_numerical_dataset('formatted_gyroscope.csv', 'timestamp', ['x','y','z'], 'avg', 'gyr_phone_')
+    # dataset.add_numerical_dataset('formatted_light.csv', 'timestamp', ['lux'], 'avg', 'light_phone_')
+    dataset.add_numerical_dataset('formatted_location.csv', 'timestamp', ['latitude','longitude','speed'], 'avg', 'location_phone_')
+    
     # Get the resulting pandas data table
     dataset = dataset.data_table
 
