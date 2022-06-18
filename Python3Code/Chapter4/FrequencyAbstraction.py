@@ -25,7 +25,7 @@ class FourierTransformation:
     def find_fft_transformation(self, data):
         # Create the transformation, this includes the amplitudes of both the real
         # and imaginary part.
-        # print(data.shape)
+        
         transformation = np.fft.rfft(data, len(data))
         # real
         real_ampl = transformation.real
@@ -56,8 +56,9 @@ class FourierTransformation:
     # Get frequencies over a certain window.
     def abstract_frequency(self, data_table, columns, window_size, sampling_rate):
         self.freqs = (sampling_rate * np.fft.rfftfreq(int(window_size))).round(3)
-
+        print("in abs freq: " + str(data_table.shape))
         for col in columns:
+            print(col)
             collist = []
             # prepare column names
             collist.append(col + '_max_freq')
@@ -76,10 +77,12 @@ class FourierTransformation:
                 window_size + 1).apply(self.find_fft_transformation)
 
             # Pad the missing rows with nans
-            frequencies = np.pad(np.array(self.temp_list), ((40, 0), (0, 0)),
+            frequencies = np.pad(np.array(self.temp_list), ((28, 0), (0, 0)),
                         'constant', constant_values=np.nan)
             # add new freq columns to frame
-            
+            print(frequencies.shape)
+            print("in abs freq2: " + str(data_table.shape))
+        
             data_table[collist] = pd.DataFrame(frequencies, index=data_table.index)
 
             # reset temp-storage array

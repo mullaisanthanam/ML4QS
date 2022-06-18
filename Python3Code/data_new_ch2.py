@@ -13,9 +13,9 @@ import pandas as pd
 
 DATASET_PATH = Path('./datasets/')
 RESULT_PATH = Path('./intermediate_datafiles/')
-RESULT_FNAME = 'chapter2_result_new.csv'
+RESULT_FNAME = 'chapter2_result_new_350.csv'
 
-GRANULARITIES = [60000, 250]
+GRANULARITIES = [50000, 350]
 
 # We can call Path.mkdir(exist_ok=True) to make any required directories if they don't already exist.
 [path.mkdir(exist_ok=True, parents=True) for path in [DATASET_PATH, RESULT_PATH]]
@@ -64,10 +64,10 @@ for milliseconds_per_instance in GRANULARITIES:
     dataset = dataset.data_table
 
     # Plot the data
-    # DataViz = VisualizeDataset(__file__)
+    DataViz = VisualizeDataset(__file__)
 
     # # Boxplot
-    # DataViz.plot_dataset_boxplot(dataset, ['acc_phone_x','acc_phone_y','acc_phone_z'])
+    DataViz.plot_dataset_boxplot(dataset, ['gyr_phone_x','gyr_phone_y','gyr_phone_z'])
 
     util.print_statistics(dataset)
     datasets.append(copy.deepcopy(dataset))

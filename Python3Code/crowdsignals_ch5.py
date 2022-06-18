@@ -28,8 +28,8 @@ def main():
 
     # As usual, we set our program constants, read the input file and initialize a visualization object.
     DATA_PATH = Path('./intermediate_datafiles/')
-    DATASET_FNAME = 'chapter4_result.csv'
-    RESULT_FNAME = 'chapter5_result.csv'
+    DATASET_FNAME = 'chapter4_result_new.csv'
+    RESULT_FNAME = 'chapter5_result_new.csv'
 
     try:
         dataset = pd.read_csv(DATA_PATH / DATASET_FNAME, index_col=0)

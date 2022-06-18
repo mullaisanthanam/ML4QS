@@ -22,8 +22,8 @@ from Chapter4.TextAbstraction import TextAbstraction
 
 # Read the result from the previous chapter, and make sure the index is of the type datetime.
 DATA_PATH = Path('./intermediate_datafiles/')
-DATASET_FNAME = 'chapter3_result_final.csv'
-RESULT_FNAME = 'chapter4_result.csv'
+DATASET_FNAME = 'chapter3_result_final_new.csv'
+RESULT_FNAME = 'chapter4_result_new.csv'
 
 def print_flags():
     """
@@ -77,9 +77,9 @@ def main():
        
         fs = float(1000)/milliseconds_per_instance
         ws = int(float(10000)/milliseconds_per_instance)
-        dataset = FreqAbs.abstract_frequency(dataset, ['acc_phone_x'], ws, fs)
+        dataset = FreqAbs.abstract_frequency(dataset, ['mag_watch_x'], ws, fs)
         # Spectral analysis.
-        DataViz.plot_dataset(dataset, ['acc_phone_x_max_freq', 'acc_phone_x_freq_weighted', 'acc_phone_x_pse', 'label'], ['like', 'like', 'like', 'like'], ['line', 'line', 'line','points'])
+        DataViz.plot_dataset(dataset, ['mag_watch_x_max_freq', 'mag_watch_x_freq_weighted', 'mag_watch_x_pse', 'label'], ['like', 'like', 'like', 'like'], ['line', 'line', 'line','points'])
         print("--- %s seconds ---" % (time.time() - start_time))
   
     if FLAGS.mode == 'final':
@@ -88,13 +88,16 @@ def main():
         ws = int(float(0.5*60000)/milliseconds_per_instance)
         fs = float(1000)/milliseconds_per_instance
 
+        print(ws)
+        print(fs)
         selected_predictor_cols = [c for c in dataset.columns if not 'label' in c]
 
         dataset = NumAbs.abstract_numerical(dataset, selected_predictor_cols, ws, 'mean')
         dataset = NumAbs.abstract_numerical(dataset, selected_predictor_cols, ws, 'std')
         # TODO: Add your own aggregation methods here
         
-        DataViz.plot_dataset(dataset, ['acc_phone_x', 'gyr_phone_x', 'hr_watch_rate', 'light_phone_lux', 'mag_phone_x', 'press_phone_', 'pca_1', 'label'], ['like', 'like', 'like', 'like', 'like', 'like', 'like','like'], ['line', 'line', 'line', 'line', 'line', 'line', 'line', 'points'])
+        # DataViz.plot_dataset(dataset, ['acc_phone_x', 'gyr_phone_x', 'hr_watch_rate', 'light_phone_lux', 'mag_phone_x', 'press_phone_', 'pca_1', 'label'], ['like', 'like', 'like', 'like', 'like', 'like', 'like','like'], ['line', 'line', 'line', 'line', 'line', 'line', 'line', 'points'])
+        DataViz.plot_dataset(dataset, ['acc_phone_x', 'gyr_phone_x', 'light_phone_lux',  'pca_1', 'label'], ['like', 'like', 'like', 'like','like'], ['line', 'line', 'line', 'line', 'points'])
 
      
         CatAbs = CategoricalAbstraction()
@@ -104,12 +107,11 @@ def main():
 
         periodic_predictor_cols = ['acc_phone_x'
                                     ,'acc_phone_y','acc_phone_z',
-                                    'acc_watch_x','acc_watch_y','acc_watch_z','gyr_phone_x','gyr_phone_y',
-                                'gyr_phone_z','gyr_watch_x','gyr_watch_y','gyr_watch_z','mag_phone_x','mag_phone_y','mag_phone_z',
-                                'mag_watch_x','mag_watch_y','mag_watch_z']
+                                    'gyr_phone_x','gyr_phone_y',
+                                'gyr_phone_z']
 
 
-        
+        print(dataset.shape)
         dataset = FreqAbs.abstract_frequency(copy.deepcopy(dataset), periodic_predictor_cols, int(float(10000)/milliseconds_per_instance), fs)
 
 
@@ -123,7 +125,8 @@ def main():
 
         dataset.to_csv(DATA_PATH / RESULT_FNAME)
 
-        DataViz.plot_dataset(dataset, ['acc_phone_x', 'gyr_phone_x', 'hr_watch_rate', 'light_phone_lux', 'mag_phone_x', 'press_phone_', 'pca_1', 'label'], ['like', 'like', 'like', 'like', 'like', 'like', 'like','like'], ['line', 'line', 'line', 'line', 'line', 'line', 'line', 'points'])
+        # DataViz.plot_dataset(dataset, ['acc_phone_x', 'gyr_phone_x', 'hr_watch_rate', 'light_phone_lux', 'mag_phone_x', 'press_phone_', 'pca_1', 'label'], ['like', 'like', 'like', 'like', 'like', 'like', 'like','like'], ['line', 'line', 'line', 'line', 'line', 'line', 'line', 'points'])
+        DataViz.plot_dataset(dataset, ['acc_phone_x', 'gyr_phone_x', 'light_phone_lux', 'pca_1', 'label'], ['like', 'like', 'like', 'like','like'], ['line', 'line', 'line', 'line', 'points'])
         print("--- %s seconds ---" % (time.time() - start_time))
   
 if __name__ == '__main__':

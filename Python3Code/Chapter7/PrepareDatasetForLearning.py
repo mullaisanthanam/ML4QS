@@ -40,8 +40,15 @@ class PrepareDatasetForLearning:
             # otherwise we keep the default class.
             if sum_values[i] == 1:
                 dataset.iloc[i, dataset.columns.get_loc(self.class_col)] = dataset[labels].iloc[i].idxmax(axis=1)
+            # for coding question 1 chp 7
+            # else:
+            #     dataset.iloc[i, dataset.columns.get_loc(self.class_col)] =
         # And remove our old binary columns.
         dataset = dataset.drop(labels, axis=1)
+        print("after dropping")
+        print(dataset['class'].unique())
+        print("-----------labels -----")
+        print(labels)
         return dataset
 
     # Split a dataset of a single person for a classificaiton problem with the the specified class columns class_labels.
