@@ -30,9 +30,9 @@ from util.VisualizeDataset import VisualizeDataset
 
 # Read the result from the previous chapter, and make sure the index is of the type datetime.
 DATA_PATH = Path('./intermediate_datafiles/')
-DATASET_FNAME = 'chapter5_result_new.csv'
-RESULT_FNAME = 'chapter7_classification_result_new.csv'
-EXPORT_TREE_PATH = Path('./figures/crowdsignals_ch7_classification_new/')
+DATASET_FNAME = 'chapter5_result.csv'
+RESULT_FNAME = 'chapter7_classification_result.csv'
+EXPORT_TREE_PATH = Path('./figures/crowdsignals_ch7_classification/')
 
 # Next, we declare the parameters we'll use in the algorithms.
 N_FORWARD_SELECTION = 50
@@ -63,10 +63,10 @@ print('Test set length is: ', len(test_X.index))
 
 # Select subsets of the features that we will consider:
 
-# basic_features = ['acc_phone_x','acc_phone_y','acc_phone_z','acc_watch_x','acc_watch_y','acc_watch_z','gyr_phone_x','gyr_phone_y','gyr_phone_z','gyr_watch_x','gyr_watch_y','gyr_watch_z',
-#                   'hr_watch_rate', 'light_phone_lux','mag_phone_x','mag_phone_y','mag_phone_z','mag_watch_x','mag_watch_y','mag_watch_z','press_phone_pressure']
-basic_features = ['acc_phone_x','acc_phone_y','acc_phone_z','gyr_phone_x','gyr_phone_y','gyr_phone_z',
-                 'light_phone_lux']
+basic_features = ['acc_phone_x','acc_phone_y','acc_phone_z','acc_watch_x','acc_watch_y','acc_watch_z','gyr_phone_x','gyr_phone_y','gyr_phone_z','gyr_watch_x','gyr_watch_y','gyr_watch_z',
+                  'hr_watch_rate', 'light_phone_lux','mag_phone_x','mag_phone_y','mag_phone_z','mag_watch_x','mag_watch_y','mag_watch_z','press_phone_pressure']
+# basic_features = ['acc_phone_x','acc_phone_y','acc_phone_z','gyr_phone_x','gyr_phone_y','gyr_phone_z',
+#                  'light_phone_lux']
 
 pca_features = ['pca_1','pca_2','pca_3','pca_4','pca_5','pca_6','pca_7']
 time_features = [name for name in dataset.columns if '_temp_' in name]
@@ -98,11 +98,11 @@ DataViz.plot_xy(x=[range(1, N_FORWARD_SELECTION+1)], y=[ordered_scores],
 
 
 # based on python2 features, slightly different. 
-# selected_features = ['acc_phone_y_freq_0.0_Hz_ws_40', 'press_phone_pressure_temp_mean_ws_120', 'gyr_phone_x_temp_std_ws_120',
-#                      'mag_watch_y_pse', 'mag_phone_z_max_freq', 'gyr_watch_y_freq_weighted', 'gyr_phone_y_freq_1.0_Hz_ws_40',
-#                      'acc_phone_x_freq_1.9_Hz_ws_40', 'mag_watch_z_freq_0.9_Hz_ws_40', 'acc_watch_y_freq_0.5_Hz_ws_40']
-selected_features = ['acc_phone_y_temp_mean_ws_85', 'pca_6_temp_std_ws_85', 'pca_1_temp_mean_ws_85', 'gyr_phone_x_temp_std_ws_85',
-                    'pca_4_temp_mean_ws_85', 'pca_4', 'gyr_phone_x_freq_1.122_Hz_ws_28', 'gyr_phone_z_freq_0.306_Hz_ws_28']
+selected_features = ['acc_phone_y_freq_0.0_Hz_ws_40', 'press_phone_pressure_temp_mean_ws_120', 'gyr_phone_x_temp_std_ws_120',
+                     'mag_watch_y_pse', 'mag_phone_z_max_freq', 'gyr_watch_y_freq_weighted', 'gyr_phone_y_freq_1.0_Hz_ws_40',
+                     'acc_phone_x_freq_1.9_Hz_ws_40', 'mag_watch_z_freq_0.9_Hz_ws_40', 'acc_watch_y_freq_0.5_Hz_ws_40']
+# selected_features = ['acc_phone_y_temp_mean_ws_85', 'pca_6_temp_std_ws_85', 'pca_1_temp_mean_ws_85', 'gyr_phone_x_temp_std_ws_85',
+#                     'pca_4_temp_mean_ws_85', 'pca_4', 'gyr_phone_x_freq_1.122_Hz_ws_28', 'gyr_phone_z_freq_0.306_Hz_ws_28']
 
 
 # # # Let us first study the impact of regularization and model complexity: does regularization prevent overfitting?

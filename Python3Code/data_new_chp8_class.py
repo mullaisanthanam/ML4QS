@@ -97,7 +97,7 @@ features_after_chapter_5 = list(set().union(basic_features, pca_features, time_f
 selected_features = ['acc_phone_y_temp_mean_ws_85', 'pca_6_temp_std_ws_85', 'pca_1_temp_mean_ws_85', 'gyr_phone_x_temp_std_ws_85',
                     'pca_4_temp_mean_ws_85', 'pca_4', 'gyr_phone_x_freq_1.122_Hz_ws_28', 'gyr_phone_z_freq_0.306_Hz_ws_28']
 
-possible_feature_sets = [basic_features, features_after_chapter_3, features_after_chapter_4, features_after_chapter_5, selected_features]
+possible_feature_sets = [basic_features]
 feature_names = ['initial set', 'Chapter 3', 'Chapter 4', 'Chapter 5', 'Selected features']
 
 # Let us first study whether the time series is stationary and what the autocorrelations are.
@@ -115,11 +115,11 @@ eval = RegressionEvaluation()
 
 # We repeat the experiment a number of times to get a bit more robust data as the initialization of e.g. the NN is random.
 
-repeats = 10
+repeats = 1
 
 # we set a washout time to give the NN's the time to stabilize. We do not compute the error during the washout time.
 
-washout_time = 10
+washout_time = 2
 
 scores_over_all_algs = []
 
@@ -128,7 +128,8 @@ for i in range(0, len(possible_feature_sets)):
     print(f'Evaluating for features {possible_feature_sets[i]}')
     selected_train_X = train_X[possible_feature_sets[i]]
     selected_test_X = test_X[possible_feature_sets[i]]
-
+    selected_train_X = selected_train_X.dropna()
+    selected_test_X = selected_test_X.dropna()
     # First we run our non deterministic classifiers a number of times to average their score.
 
     performance_tr_res = 0
@@ -195,14 +196,18 @@ for i in range(0, len(possible_feature_sets)):
     util.print_table_row_performances_regression(feature_names[i], len(selected_train_X.index), len(selected_test_X.index), scores_with_sd)
     scores_over_all_algs.append(scores_with_sd)
 
+print(scores_over_all_algs)
 DataViz.plot_performances_regression(['Reservoir', 'RNN', 'Time series'], feature_names, scores_over_all_algs)
 
+train_X = train_X.dropna()
+test_X = test_X.dropna()
+
 regr_train_y, regr_test_y = learner.reservoir_computing(train_X[features_after_chapter_5], train_y, test_X[features_after_chapter_5], test_y, gridsearch=False)
-DataViz.plot_numerical_prediction_versus_real(train_X.index, train_y, regr_train_y['labelSitting'], test_X.index, test_y, regr_test_y['labelSitting'], 'heart rate')
+DataViz.plot_numerical_prediction_versus_real(train_X.index, train_y, regr_train_y['labelSitting'], test_X.index, test_y, regr_test_y['labelSitting'], 'labelSitting')
 regr_train_y, regr_test_y = learner.recurrent_neural_network(train_X[basic_features], train_y, test_X[basic_features], test_y, gridsearch=True)
-DataViz.plot_numerical_prediction_versus_real(train_X.index, train_y, regr_train_y['labelSitting'], test_X.index, test_y, regr_test_y['labelSitting'], 'heart rate')
+DataViz.plot_numerical_prediction_versus_real(train_X.index, train_y, regr_train_y['labelSitting'], test_X.index, test_y, regr_test_y['labelSitting'], 'labelSitting')
 regr_train_y, regr_test_y = learner.time_series(train_X[basic_features], train_y, test_X[basic_features], test_y, gridsearch=True)
-DataViz.plot_numerical_prediction_versus_real(train_X.index, train_y, regr_train_y['labelSitting'], test_X.index, test_y, regr_test_y['labelSitting'], 'heart rate')
+DataViz.plot_numerical_prediction_versus_real(train_X.index, train_y, regr_train_y['labelSitting'], test_X.index, test_y, regr_test_y['labelSitting'], 'labelSitting')
 
 # And now some example code for using the dynamical systems model with parameter tuning (note: focus on predicting accelerometer data):
 

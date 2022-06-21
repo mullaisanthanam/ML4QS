@@ -28,9 +28,10 @@ class PrepareDatasetForLearning:
         # Find which columns are relevant based on the possibly partial class_label
         # specification.
         labels = []
+        print(class_labels)
         for i in range(0, len(class_labels)):
             labels.extend([name for name in list(dataset.columns) if class_labels[i] == name[0:len(class_labels[i])]])
-
+        
         # Determine how many class values are label as 'true' in our class columns.
         sum_values = dataset[labels].sum(axis=1)
         # Create a new 'class' column and set the value to the default class.
@@ -40,9 +41,10 @@ class PrepareDatasetForLearning:
             # otherwise we keep the default class.
             if sum_values[i] == 1:
                 dataset.iloc[i, dataset.columns.get_loc(self.class_col)] = dataset[labels].iloc[i].idxmax(axis=1)
+
             # for coding question 1 chp 7
             # else:
-            #     dataset.iloc[i, dataset.columns.get_loc(self.class_col)] =
+            #     dataset.iloc[i, dataset.columns.get_loc(self.class_col)] = "labelNone"
         # And remove our old binary columns.
         dataset = dataset.drop(labels, axis=1)
         print("after dropping")
