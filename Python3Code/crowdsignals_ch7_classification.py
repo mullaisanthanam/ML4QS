@@ -29,7 +29,7 @@ from util import util
 from util.VisualizeDataset import VisualizeDataset
 
 # Read the result from the previous chapter, and make sure the index is of the type datetime.
-DATA_PATH = Path('./intermediate_datafiles/')
+DATA_PATH = Path('./intermediate_datafiles/assignment3')
 DATASET_FNAME = 'chapter5_result.csv'
 RESULT_FNAME = 'chapter7_classification_result.csv'
 EXPORT_TREE_PATH = Path('./figures/crowdsignals_ch7_classification/')
@@ -63,8 +63,7 @@ print('Test set length is: ', len(test_X.index))
 
 # Select subsets of the features that we will consider:
 
-basic_features = ['acc_phone_x','acc_phone_y','acc_phone_z','acc_watch_x','acc_watch_y','acc_watch_z','gyr_phone_x','gyr_phone_y','gyr_phone_z','gyr_watch_x','gyr_watch_y','gyr_watch_z',
-                  'hr_watch_rate', 'light_phone_lux','mag_phone_x','mag_phone_y','mag_phone_z','mag_watch_x','mag_watch_y','mag_watch_z','press_phone_pressure']
+basic_features = ['glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z', 'glasses_GYRO_X', 'glasses_GYRO_Y', 'glasses_GYRO_Z', 'glasses_EOG_L', 'glasses_EOG_R', 'glasses_EOG_H', 'glasses_EOG_V']
 pca_features = ['pca_1','pca_2','pca_3','pca_4','pca_5','pca_6','pca_7']
 time_features = [name for name in dataset.columns if '_temp_' in name]
 freq_features = [name for name in dataset.columns if (('_freq' in name) or ('_pse' in name))]
@@ -93,7 +92,8 @@ features, ordered_features, ordered_scores = fs.forward_selection(N_FORWARD_SELE
 DataViz.plot_xy(x=[range(1, N_FORWARD_SELECTION+1)], y=[ordered_scores],
                 xlabel='number of features', ylabel='accuracy')
 
-
+print(features)
+print(train_X)
 # based on python2 features, slightly different. 
 selected_features = ['acc_phone_y_freq_0.0_Hz_ws_40', 'press_phone_pressure_temp_mean_ws_120', 'gyr_phone_x_temp_std_ws_120',
                      'mag_watch_y_pse', 'mag_phone_z_max_freq', 'gyr_watch_y_freq_weighted', 'gyr_phone_y_freq_1.0_Hz_ws_40',
