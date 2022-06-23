@@ -45,25 +45,29 @@ class CreateDataset:
         print(f'Reading data from {file}')
         dataset = pd.read_csv(self.base_dir / file, skipinitialspace=True)
 
+        print()
+        # print(dataset[timestamp_col])
         # Convert timestamps to dates
         dataset[timestamp_col] = pd.to_datetime(dataset[timestamp_col])
-        
+        # print(dataset[timestamp_col])
         # Create a table based on the times found in the dataset
         if self.data_table is None:
             self.create_dataset(min(dataset[timestamp_col]), max(dataset[timestamp_col]), value_cols, prefix)
         else:
             for col in value_cols:
                 self.data_table[str(prefix) + str(col)] = np.nan
-        print("relevant rows")
-        # print(self.data_table.index)
+        print(self.data_table)
         # Over all rows in the new table
         for i in range(0, len(self.data_table.index)):
             # Select the relevant measurements.
+            # print("timestamp_col")
+            # print(dataset[timestamp_col])
             relevant_rows = dataset[
                 (dataset[timestamp_col] >= self.data_table.index[i]) &
                 (dataset[timestamp_col] < (self.data_table.index[i] +
                                            timedelta(milliseconds=self.granularity)))
             ]
+            # print("relevant rows")
             # print(relevant_rows)
             for col in value_cols:
                 # Take the average value
@@ -72,9 +76,10 @@ class CreateDataset:
                         self.data_table.loc[self.data_table.index[i], str(prefix)+str(col)] = np.average(relevant_rows[col])
                     else:
                         raise ValueError(f"Unknown aggregation {aggregation}")
-                else:
+                else: 
                     self.data_table.loc[self.data_table.index[i], str(prefix)+str(col)] = np.nan
-
+        print("data table after: ")
+        print(self.data_table)
     # Remove undesired value from the names.
     def clean_name(self, name):
         return re.sub('[^0-9a-zA-Z]+', '', name)
