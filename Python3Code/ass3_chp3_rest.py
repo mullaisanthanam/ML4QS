@@ -25,7 +25,7 @@ from Chapter3.KalmanFilters import KalmanFilters
 DATA_PATH = Path('./intermediate_datafiles/assigment_3')    
 DATASET_FNAME = 'ass3_chp3_result_outliers_new.csv'
 RESULT_FNAME = 'ass3_chp3_result_final_new.csv'
-ORIG_DATASET_FNAME = 'chp2_dataset_dropped.csv'
+ORIG_DATASET_FNAME = 'ass3_chp2_result.csv'
 
 def print_flags():
     """
@@ -135,9 +135,9 @@ def main():
         # Now, for the final version. 
         # We first start with imputation by interpolation
        
-        for col in [c for c in dataset.columns if not 'label' in c]:
-            dataset = MisVal.impute_interpolate(dataset, col)
-
+        # for col in [c for c in dataset.columns if not 'label' in c]:
+        #     dataset = MisVal.impute_interpolate(dataset, col)
+        dataset = dataset.dropna(axis=0)
         # And now let us include all LOWPASS measurements that have a form of periodicity (and filter them):
         # periodic_measurements = ['acc_phone_x', 'acc_phone_y', 'acc_phone_z', 'acc_watch_x', 'acc_watch_y', 'acc_watch_z', 'gyr_phone_x', 'gyr_phone_y',
         #                          'gyr_phone_z', 'gyr_watch_x', 'gyr_watch_y', 'gyr_watch_z', 'mag_phone_x', 'mag_phone_y', 'mag_phone_z', 'mag_watch_x',
