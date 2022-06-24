@@ -22,7 +22,7 @@ from Chapter4.TextAbstraction import TextAbstraction
 
 # Read the result from the previous chapter, and make sure the index is of the type datetime.
 DATA_PATH = Path('./intermediate_datafiles/assigment_3')
-DATASET_FNAME = 'ass3_chp3_result_final_new.csv'
+DATASET_FNAME = 'ass3_chp3_result_final.csv'
 RESULT_FNAME = 'ass3_chapter4_result.csv'
 
 def print_flags():
@@ -88,27 +88,28 @@ def main():
         ws = int(float(0.5*60000)/milliseconds_per_instance)
         fs = float(1000)/milliseconds_per_instance
 
-        print(ws)
-        print(fs)
+        print("the ws value is:" + str(ws))
+        print("the fs value is:" + str(fs))
         selected_predictor_cols = [c for c in dataset.columns if not 'label' in c]
 
         dataset = NumAbs.abstract_numerical(dataset, selected_predictor_cols, ws, 'mean')
         dataset = NumAbs.abstract_numerical(dataset, selected_predictor_cols, ws, 'std')
+        dataset = NumAbs.abstract_numerical(dataset, selected_predictor_cols, ws, 'median')
         # TODO: Add your own aggregation methods here
         
-        # DataViz.plot_dataset(dataset, ['acc_phone_x', 'gyr_phone_x', 'hr_watch_rate', 'light_phone_lux', 'mag_phone_x', 'press_phone_', 'pca_1', 'label'], ['like', 'like', 'like', 'like', 'like', 'like', 'like','like'], ['line', 'line', 'line', 'line', 'line', 'line', 'line', 'points'])
         DataViz.plot_dataset(dataset, ['glasses_ACC_X','glasses_GYRO_X', 'glasses_EOG_L', 'pca_1', 'label'], ['like', 'like', 'like', 'like','like'], ['line', 'line', 'line', 'line', 'points'])
 
      
         CatAbs = CategoricalAbstraction()
         
-        dataset = CatAbs.abstract_categorical(dataset, ['label'], ['like'], 0.03, int(float(5*60000)/milliseconds_per_instance), 2)
+        dataset = CatAbs.abstract_categorical(dataset, ['label'], ['like'], 0.02, int(float(5*60000)/milliseconds_per_instance), 2)
 
 
         periodic_predictor_cols = ['glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z',
-                                    'glasses_GYRO_X', 'glasses_GYRO_Y', 'glasses_GYRO_Z']
+                                    'glasses_GYRO_X', 'glasses_GYRO_Y', 'glasses_GYRO_Z',
+                                    'glasses_EOG_L','glasses_EOG_R','glasses_EOG_H','glasses_EOG_V']
 
-
+        print("dataset shape is: ")
         print(dataset.shape)
         dataset = FreqAbs.abstract_frequency(copy.deepcopy(dataset), periodic_predictor_cols, int(float(10000)/milliseconds_per_instance), fs)
 

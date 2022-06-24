@@ -54,7 +54,7 @@ def main():
         for k in k_values:
             print(f'k = {k}')
             dataset_cluster = clusteringNH.k_means_over_instances(copy.deepcopy(
-                dataset), ['acc_phone_x', 'acc_phone_y', 'acc_phone_z'], k, 'default', 20, 10)
+                dataset), ['glasses_GYRO_X','glasses_GYRO_Y','glasses_GYRO_Z'], k, 'manhattan', 20, 10)
             silhouette_score = dataset_cluster['silhouette'].mean()
             print(f'silhouette = {silhouette_score}')
             silhouette_values.append(silhouette_score)
@@ -78,7 +78,7 @@ def main():
         for k in k_values:
             print(f'k = {k}')
             dataset_cluster = clusteringNH.k_medoids_over_instances(copy.deepcopy(
-                dataset), ['acc_phone_x', 'acc_phone_y', 'acc_phone_z'], k, 'default', 20, n_inits=10)
+                dataset), ['glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z'], k, 'default', 20, n_inits=10)
             silhouette_score = dataset_cluster['silhouette'].mean()
             print(f'silhouette = {silhouette_score}')
             silhouette_values.append(silhouette_score)
@@ -93,12 +93,12 @@ def main():
         print(f'Highest K-Medoids silhouette score: k = {k}')
 
         dataset_kmed = clusteringNH.k_medoids_over_instances(copy.deepcopy(dataset), [
-                                                             'acc_phone_x', 'acc_phone_y', 'acc_phone_z'], k, 'default', 20, n_inits=50)
+                                                             'glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z'], k, 'default', 20, n_inits=50)
         DataViz.plot_clusters_3d(dataset_kmed, [
-                                 'acc_phone_x', 'acc_phone_y', 'acc_phone_z'], 'cluster', ['label'])
+                                 'glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z'], 'cluster', ['label'])
         DataViz.plot_silhouette(dataset_kmed, 'cluster', 'silhouette')
         util.print_latex_statistics_clusters(dataset_kmed, 'cluster', [
-                                             'acc_phone_x', 'acc_phone_y', 'acc_phone_z'], 'label')
+                                             'glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z'], 'label')
 
     # And the hierarchical clustering is the last one we try
     if FLAGS.mode == 'agglomerative':
@@ -112,7 +112,7 @@ def main():
         for k in k_values:
             print(f'k = {k}')
             dataset, l = clusteringH.agglomerative_over_instances(dataset, [
-                                                                          'acc_phone_x', 'acc_phone_y', 'acc_phone_z'], k, 'euclidean', use_prev_linkage=True, link_function='ward')
+                                                                          'glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z'], k, 'euclidean', use_prev_linkage=True, link_function='ward')
             silhouette_score = dataset['silhouette'].mean()
             print(f'silhouette = {silhouette_score}')
             silhouette_values.append(silhouette_score)
@@ -127,11 +127,11 @@ def main():
         # And we select the outcome dataset of the knn clustering....
         clusteringNH = NonHierarchicalClustering()
 
-        dataset = clusteringNH.k_means_over_instances(dataset, ['glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z'], FLAGS.k, 'default', 50, 50)
-        DataViz.plot_clusters_3d(dataset, ['glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z'], 'cluster', ['label'])
+        dataset = clusteringNH.k_means_over_instances(dataset, ['glasses_GYRO_X','glasses_GYRO_Y','glasses_GYRO_Z'], FLAGS.k, 'manhattan', 50, 50)
+        DataViz.plot_clusters_3d(dataset, ['glasses_GYRO_X','glasses_GYRO_Y','glasses_GYRO_Z'], 'cluster', ['label'])
         DataViz.plot_silhouette(dataset, 'cluster', 'silhouette')
         util.print_latex_statistics_clusters(
-            dataset, 'cluster', ['glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z'], 'label')
+            dataset, 'cluster', ['glasses_GYRO_X','glasses_GYRO_Y','glasses_GYRO_Z'], 'label')
         del dataset['silhouette']
 
         dataset.to_csv(DATA_PATH / RESULT_FNAME)

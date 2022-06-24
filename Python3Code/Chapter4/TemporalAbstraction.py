@@ -136,6 +136,7 @@ class CategoricalAbstraction:
             times = self.determine_pattern_times(data_table, pattern, window_size)
             # Compute the support
             support = float(len(times))/len(data_table.index)
+            print(support)
             # If we meet the minimum support, append the selected patterns and set the
             # value to 1 at which it occurs.
             if support >= min_support:
@@ -176,7 +177,8 @@ class CategoricalAbstraction:
                 relevant_dataset_cols.append(cols[i])
             else:
                 relevant_dataset_cols.extend([name for name in col_names if cols[i] in name])
-
+        print("in categorical: relevant cols")
+        print(relevant_dataset_cols)
         # Generate the one patterns first
         potential_1_patterns = [[pattern] for pattern in relevant_dataset_cols]
 

@@ -31,6 +31,10 @@ class FourierTransformation:
         real_ampl = transformation.real
         # max
         max_freq = self.freqs[np.argmax(real_ampl[0:len(real_ampl)])]
+
+        # mean
+        mean_freq = float(np.sum(self.freqs)/len(self.freqs))
+
         # weigthed
         freq_weigthed = float(np.sum(self.freqs * real_ampl)) / np.sum(real_ampl)
 
@@ -46,6 +50,7 @@ class FourierTransformation:
             pse = 0
 
         real_ampl = np.insert(real_ampl, 0, max_freq)
+        real_ampl = np.insert(real_ampl, 0, mean_freq)
         real_ampl = np.insert(real_ampl, 0, freq_weigthed)
         row = np.insert(real_ampl, 0, pse)
 
@@ -62,6 +67,7 @@ class FourierTransformation:
             collist = []
             # prepare column names
             collist.append(col + '_max_freq')
+            collist.append(col + '_mean_freq')
             collist.append(col + '_freq_weighted')
             collist.append(col + '_pse')
             
@@ -80,9 +86,9 @@ class FourierTransformation:
             frequencies = np.pad(np.array(self.temp_list), ((window_size, 0), (0, 0)),
                         'constant', constant_values=np.nan)
             # add new freq columns to frame
+            print("----------")
             print(frequencies.shape)
             print("in abs freq2: " + str(data_table.shape))
-        
             data_table[collist] = pd.DataFrame(frequencies, index=data_table.index)
 
             # reset temp-storage array
