@@ -18,8 +18,8 @@ from pathlib import Path
 import argparse
 
 # Set up file names and locations.
-DATA_PATH = Path('./intermediate_datafiles/')
-DATASET_FNAME = 'chapter2_result.csv'
+DATA_PATH = Path('./intermediate_datafiles/assignment3')
+DATASET_FNAME = 'ass3_chp2_result_480.csv'
 RESULT_FNAME = 'chapter3_result_outliers.csv'
 
 def print_flags():
@@ -50,7 +50,7 @@ def main():
     # Step 1: Let us see whether we have some outliers we would prefer to remove.
 
     # Determine the columns we want to experiment on.
-    outlier_columns = ['acc_phone_x', 'light_phone_lux']
+    outlier_columns = ['glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z', 'glasses_GYRO_X', 'glasses_GYRO_Y', 'glasses_GYRO_Z', 'glasses_EOG_L', 'glasses_EOG_R', 'glasses_EOG_H', 'glasses_EOG_V']
     # Create the outlier classes.
     OutlierDistr = DistributionBasedOutlierDetection()
     OutlierDist = DistanceBasedOutlierDetection()

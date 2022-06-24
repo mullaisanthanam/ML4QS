@@ -22,10 +22,10 @@ from Chapter3.ImputationMissingValues import ImputationMissingValues
 from Chapter3.KalmanFilters import KalmanFilters
 
 # Set up the file names and locations.
-DATA_PATH = Path('./intermediate_datafiles/')    
+DATA_PATH = Path('./intermediate_datafiles/assignment3')    
 DATASET_FNAME = 'chapter3_result_outliers.csv'
 RESULT_FNAME = 'chapter3_result_final.csv'
-ORIG_DATASET_FNAME = 'chapter2_result.csv'
+ORIG_DATASET_FNAME = 'ass3_chp2_result_480.csv'
 
 def print_flags():
     """
@@ -53,6 +53,10 @@ def main():
     # Compute the number of milliseconds covered by an instance based on the first two rows
     milliseconds_per_instance = (
         dataset.index[1] - dataset.index[0]).microseconds/1000
+
+    # print(dataset.index[1])
+    # print(dataset.index[0])
+    # print((dataset.index[1] - dataset.index[0]).seconds)
 
     MisVal = ImputationMissingValues()
     LowPass = LowPassFilter()
@@ -82,10 +86,10 @@ def main():
 
         KalFilter = KalmanFilters()
         kalman_dataset = KalFilter.apply_kalman_filter(
-            original_dataset, 'acc_phone_x')
+            original_dataset, 'glasses_ACC_X')
         DataViz.plot_imputed_values(kalman_dataset, [
-                                    'original', 'kalman'], 'acc_phone_x', kalman_dataset['acc_phone_x_kalman'])
-        DataViz.plot_dataset(kalman_dataset, ['acc_phone_x', 'acc_phone_x_kalman'], [
+                                    'original', 'kalman'], 'glasses_ACC_X', kalman_dataset['glasses_ACC_X_kalman'])
+        DataViz.plot_dataset(kalman_dataset, ['glasses_ACC_X', 'glasses_ACC_X_kalman'], [
                              'exact', 'exact'], ['line', 'line'])
 
         # We ignore the Kalman filter output for now...
@@ -96,12 +100,12 @@ def main():
 
         # Determine the sampling frequency.
         fs = float(1000)/milliseconds_per_instance
-        cutoff = 1.5
+        cutoff = 1
         # Let us study acc_phone_x:
         new_dataset = LowPass.low_pass_filter(copy.deepcopy(
-            dataset), 'acc_phone_x', fs, cutoff, order=10)
+            dataset), 'glasses_ACC_X', fs, cutoff, order=10)
         DataViz.plot_dataset(new_dataset.iloc[int(0.4*len(new_dataset.index)):int(0.43*len(new_dataset.index)), :],
-                             ['acc_phone_x', 'acc_phone_x_lowpass'], ['exact', 'exact'], ['line', 'line'])
+                             ['glasses_ACC_X', 'glasses_ACC_X_lowpass'], ['exact', 'exact'], ['line', 'line'])
 
     elif FLAGS.mode == 'PCA':
 
@@ -135,20 +139,19 @@ def main():
         # Now, for the final version. 
         # We first start with imputation by interpolation
        
+        dataset = dataset.dropna(axis=0)
         for col in [c for c in dataset.columns if not 'label' in c]:
             dataset = MisVal.impute_interpolate(dataset, col)
 
         # And now let us include all LOWPASS measurements that have a form of periodicity (and filter them):
-        periodic_measurements = ['acc_phone_x', 'acc_phone_y', 'acc_phone_z', 'acc_watch_x', 'acc_watch_y', 'acc_watch_z', 'gyr_phone_x', 'gyr_phone_y',
-                                 'gyr_phone_z', 'gyr_watch_x', 'gyr_watch_y', 'gyr_watch_z', 'mag_phone_x', 'mag_phone_y', 'mag_phone_z', 'mag_watch_x',
-                                 'mag_watch_y', 'mag_watch_z']
+        periodic_measurements = ['glasses_ACC_X', 'glasses_ACC_Y', 'glasses_ACC_Z', 'glasses_GYRO_X', 'glasses_GYRO_Y', 'glasses_GYRO_Z', 'glasses_EOG_L', 'glasses_EOG_R', 'glasses_EOG_H', 'glasses_EOG_V']
 
         
         # Let us apply a lowpass filter and reduce the importance of the data above 1.5 Hz
 
         # Determine the sampling frequency.
         fs = float(1000)/milliseconds_per_instance
-        cutoff = 1.5
+        cutoff = 1
 
         for col in periodic_measurements:
             dataset = LowPass.low_pass_filter(
@@ -165,10 +168,9 @@ def main():
         dataset = PCA.apply_pca(copy.deepcopy(dataset), selected_predictor_cols, n_pcs)
 
         # And the overall final dataset:
-        DataViz.plot_dataset(dataset, ['acc_', 'gyr_', 'hr_watch_rate', 'light_phone_lux', 'mag_', 'press_phone_', 'pca_', 'label'],
-                             ['like', 'like', 'like', 'like', 'like',
-                                 'like', 'like', 'like', 'like'],
-                             ['line', 'line', 'line', 'line', 'line', 'line', 'line', 'points', 'points'])
+        DataViz.plot_dataset(dataset, ['glasses_ACC_', 'glasses_GYRO_', 'glasses_EOG_', 'pca_', 'label'],
+                             ['like', 'like', 'like', 'like', 'like'],
+                             ['line', 'line', 'line', 'points', 'points'])
 
         # Store the final outcome.
 
